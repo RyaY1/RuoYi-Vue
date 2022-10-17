@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.info.mapper.PmsProductAttributeValueMapper">
+    
+    <resultMap type="PmsProductAttributeValue" id="PmsProductAttributeValueResult">
+        <result property="id"    column="id"    />
+        <result property="productId"    column="product_id"    />
+        <result property="productAttributeId"    column="product_attribute_id"    />
+        <result property="value"    column="value"    />
+    </resultMap>
+
+    <sql id="selectPmsProductAttributeValueVo">
+        select id, product_id, product_attribute_id, value from pms_product_attribute_value
+    </sql>
+
+    <select id="selectPmsProductAttributeValueList" parameterType="PmsProductAttributeValue" resultMap="PmsProductAttributeValueResult">
+        <include refid="selectPmsProductAttributeValueVo"/>
+        <where>  
+            <if test="productId != null "> and product_id = #{productId}</if>
+            <if test="productAttributeId != null "> and product_attribute_id = #{productAttributeId}</if>
+            <if test="value != null  and value != ''"> and value = #{value}</if>
+        </where>
+    </select>
+    
+    <select id="selectPmsProductAttributeValueById" parameterType="Long" resultMap="PmsProductAttributeValueResult">
+        <include refid="selectPmsProductAttributeValueVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertPmsProductAttributeValue" parameterType="PmsProductAttributeValue" useGeneratedKeys="true" keyProperty="id">
+        insert into pms_product_attribute_value
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="productId != null">product_id,</if>
+            <if test="productAttributeId != null">product_attribute_id,</if>
+            <if test="value != null">value,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="productId != null">#{productId},</if>
+            <if test="productAttributeId != null">#{productAttributeId},</if>
+            <if test="value != null">#{value},</if>
+         </trim>
+    </insert>
+
+    <update id="updatePmsProductAttributeValue" parameterType="PmsProductAttributeValue">
+        update pms_product_attribute_value
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="productId != null">product_id = #{productId},</if>
+            <if test="productAttributeId != null">product_attribute_id = #{productAttributeId},</if>
+            <if test="value != null">value = #{value},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deletePmsProductAttributeValueById" parameterType="Long">
+        delete from pms_product_attribute_value where id = #{id}
+    </delete>
+
+    <delete id="deletePmsProductAttributeValueByIds" parameterType="String">
+        delete from pms_product_attribute_value where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

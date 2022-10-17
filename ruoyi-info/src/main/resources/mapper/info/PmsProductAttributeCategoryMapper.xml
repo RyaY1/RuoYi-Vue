@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.info.mapper.PmsProductAttributeCategoryMapper">
+    
+    <resultMap type="PmsProductAttributeCategory" id="PmsProductAttributeCategoryResult">
+        <result property="id"    column="id"    />
+        <result property="name"    column="name"    />
+        <result property="attributeCount"    column="attribute_count"    />
+        <result property="paramCount"    column="param_count"    />
+    </resultMap>
+
+    <sql id="selectPmsProductAttributeCategoryVo">
+        select id, name, attribute_count, param_count from pms_product_attribute_category
+    </sql>
+
+    <select id="selectPmsProductAttributeCategoryList" parameterType="PmsProductAttributeCategory" resultMap="PmsProductAttributeCategoryResult">
+        <include refid="selectPmsProductAttributeCategoryVo"/>
+        <where>  
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="attributeCount != null "> and attribute_count = #{attributeCount}</if>
+            <if test="paramCount != null "> and param_count = #{paramCount}</if>
+        </where>
+    </select>
+    
+    <select id="selectPmsProductAttributeCategoryById" parameterType="Long" resultMap="PmsProductAttributeCategoryResult">
+        <include refid="selectPmsProductAttributeCategoryVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertPmsProductAttributeCategory" parameterType="PmsProductAttributeCategory" useGeneratedKeys="true" keyProperty="id">
+        insert into pms_product_attribute_category
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="name != null">name,</if>
+            <if test="attributeCount != null">attribute_count,</if>
+            <if test="paramCount != null">param_count,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="name != null">#{name},</if>
+            <if test="attributeCount != null">#{attributeCount},</if>
+            <if test="paramCount != null">#{paramCount},</if>
+         </trim>
+    </insert>
+
+    <update id="updatePmsProductAttributeCategory" parameterType="PmsProductAttributeCategory">
+        update pms_product_attribute_category
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null">name = #{name},</if>
+            <if test="attributeCount != null">attribute_count = #{attributeCount},</if>
+            <if test="paramCount != null">param_count = #{paramCount},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deletePmsProductAttributeCategoryById" parameterType="Long">
+        delete from pms_product_attribute_category where id = #{id}
+    </delete>
+
+    <delete id="deletePmsProductAttributeCategoryByIds" parameterType="String">
+        delete from pms_product_attribute_category where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

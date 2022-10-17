@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.info.mapper.PmsProductCategoryAttributeRelationMapper">
+    
+    <resultMap type="PmsProductCategoryAttributeRelation" id="PmsProductCategoryAttributeRelationResult">
+        <result property="id"    column="id"    />
+        <result property="productCategoryId"    column="product_category_id"    />
+        <result property="productAttributeId"    column="product_attribute_id"    />
+    </resultMap>
+
+    <sql id="selectPmsProductCategoryAttributeRelationVo">
+        select id, product_category_id, product_attribute_id from pms_product_category_attribute_relation
+    </sql>
+
+    <select id="selectPmsProductCategoryAttributeRelationList" parameterType="PmsProductCategoryAttributeRelation" resultMap="PmsProductCategoryAttributeRelationResult">
+        <include refid="selectPmsProductCategoryAttributeRelationVo"/>
+        <where>  
+            <if test="productCategoryId != null "> and product_category_id = #{productCategoryId}</if>
+            <if test="productAttributeId != null "> and product_attribute_id = #{productAttributeId}</if>
+        </where>
+    </select>
+    
+    <select id="selectPmsProductCategoryAttributeRelationById" parameterType="Long" resultMap="PmsProductCategoryAttributeRelationResult">
+        <include refid="selectPmsProductCategoryAttributeRelationVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertPmsProductCategoryAttributeRelation" parameterType="PmsProductCategoryAttributeRelation" useGeneratedKeys="true" keyProperty="id">
+        insert into pms_product_category_attribute_relation
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="productCategoryId != null">product_category_id,</if>
+            <if test="productAttributeId != null">product_attribute_id,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="productCategoryId != null">#{productCategoryId},</if>
+            <if test="productAttributeId != null">#{productAttributeId},</if>
+         </trim>
+    </insert>
+
+    <update id="updatePmsProductCategoryAttributeRelation" parameterType="PmsProductCategoryAttributeRelation">
+        update pms_product_category_attribute_relation
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="productCategoryId != null">product_category_id = #{productCategoryId},</if>
+            <if test="productAttributeId != null">product_attribute_id = #{productAttributeId},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deletePmsProductCategoryAttributeRelationById" parameterType="Long">
+        delete from pms_product_category_attribute_relation where id = #{id}
+    </delete>
+
+    <delete id="deletePmsProductCategoryAttributeRelationByIds" parameterType="String">
+        delete from pms_product_category_attribute_relation where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
